@@ -10,8 +10,8 @@
  
 
 const int mqttPort = 1883;
-const char* mqttUser = "sh"; //replace with your mqtt user name
-const char* mqttPassword = "S0r3nH0lm1657"; //replace with your mqtt password 
+const char* mqttUser = "user"; //replace with your mqtt user name
+const char* mqttPassword = "password"; //replace with your mqtt password 
 const char* mqttServer = "192.168.187.20"; //replace with your mqtt broker IP
 PubSubClient MQTTclient(WifiClient); // added for MQTT
 
