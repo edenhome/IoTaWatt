@@ -1,3 +1,8 @@
+added a mqtt publisher to the scheduler,, settings have to be done in mqttPublisher.. still no wweb interface
+most code reused from webServer..
+
+cool program,,, I'm NOT a C programer,, but the mqtt works now without killing anything elase
+
 =========================================
 IoTaWatt WiFi Electricity Monitor Project
 =========================================
