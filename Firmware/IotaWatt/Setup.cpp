@@ -10,14 +10,16 @@ void endLedCycle();
 void ledBlink();
 void setLedState();
 
+
 void setup()
 {
+   
   //*************************************** Start Serial connection (if any)***************************
    
   Serial.begin(115200);
   delay(250);
-  //Serial.println(F("\r\n\n\n** Restart **\r\n\n"));
-  //Serial.println(F("Serial Initialized"));
+  Serial.println(F("\r\n\n\n** Restart **\r\n\n"));
+  Serial.println(F("Serial Initialized"));
 
   //*************************************** Start SPI *************************************************
 
@@ -233,6 +235,7 @@ if(spiffsBegin()){
       }
       yield();
     }
+   
   }
 
  //*************************************** Start the web server ****************************
@@ -254,6 +257,8 @@ if(spiffsBegin()){
   NewService(updater, T_UPDATE);
   NewService(dataLog, T_datalog);
   NewService(historyLog, T_history);
+  NewService(mqttPublish, T_mqtt);
+  log("NET Service started");
 
   if(! validConfig){
     setLedCycle(LED_BAD_CONFIG);

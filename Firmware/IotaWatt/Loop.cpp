@@ -1,5 +1,7 @@
 #include "IotaWatt.h"
- 
+
+
+
 void loop()
 {
 /******************************************************************************
@@ -87,6 +89,7 @@ void loop()
     }
     trace(T_LOOP,6,3);
     tstPtr = selPtr;
+    
     selPtr = selPtr->next;
     tstPtr->next = tstPtr->next->next;
     ESP.wdtFeed();
@@ -101,6 +104,8 @@ void loop()
       delete selPtr;    
     }
   } 
+  
+ 
 }
 
 /*****************************************************************************************************
@@ -180,6 +185,7 @@ void AddService(struct serviceBlock* newBlock){
     newBlock->next = link->next;
     link->next = newBlock;
   }
+ 
 }
 
 /************************************************************************************************

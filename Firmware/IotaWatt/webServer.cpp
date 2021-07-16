@@ -84,14 +84,15 @@ void handleRequest(){
   if(serverOn(authUser,  F("/query"), HTTP_GET, handleQuery)) return;
   if(serverOn(authUser,  F("/DSTtest"), HTTP_GET, handleDSTtest)) return;
   if(serverOn(authAdmin, F("/update"), HTTP_GET, handleUpdate)) return;
-
+ 
+ 
 
   if(loadFromSdCard(uri)){
     return;
   }
   
   trace(T_WEB,12); 
-  String message = "Not found: ";
+  String message = "Not found:  ";
   message += (server.method() == HTTP_GET)?"GET":"POST";
   message += ", URI: ";
   message += server.uri();

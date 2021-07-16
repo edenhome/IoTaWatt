@@ -39,6 +39,7 @@
 #endif
 #include <ESP8266LLMNR.h>
 #include <DNSServer.h> 
+
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESPAsyncTCP.h>
@@ -76,11 +77,17 @@
 #include "CSVquery.h"
 #include "xbuf.h"
 #include "xurl.h"
+#include <PubSubClient.h>  // Added 14/7/21 shc
+
+
 
       // Declare global instances of classes
 
 extern WiFiClient WifiClient;
 extern WiFiManager wifiManager;
+
+
+
 extern ESP8266WebServer server;
 extern DNSServer DNS_server;
 #ifndef CORE_3_0
@@ -120,6 +127,7 @@ extern messageLog Message_log;
 #define IOTA_TABLE_DIR        "/download/tables/"
 
 extern char* deviceName;
+
 
         // Define the hardware pins
 
@@ -204,7 +212,8 @@ struct EEprom {
 #define T_uploader 31      // Uploader base class
 #define T_influx1 32       // influxDB_v1_uploader
 #define T_integrator 33    // Integrator class  
-#define T_Script 34                        
+#define T_Script 34  
+#define T_mqtt 35                      
 
       // LED codes
 
@@ -372,6 +381,7 @@ void      loop();
 void      trace(const uint8_t module, const uint8_t id, const uint8_t det=0); 
 void      logTrace(void);
 
+
 serviceBlock* NewService(Service, const uint8_t taskID=0, void* parm=0);
 void      AddService(struct serviceBlock*);
 uint32_t  dataLog(struct serviceBlock*);
@@ -383,6 +393,7 @@ uint32_t  timeSync(struct serviceBlock*);
 uint32_t  updater(struct serviceBlock*);
 uint32_t  WiFiService(struct serviceBlock*);
 uint32_t  exportLog(struct serviceBlock *_serviceBlock);
+uint32_t  mqttPublish(struct serviceBlock*);  // Added 14/7/21 shc
 uint32_t  getFeedData(); //(struct serviceBlock*);
 
 uint32_t  logReadKey(IotaLogRecord* callerRecord);
@@ -407,3 +418,6 @@ void      HTTPrelease(uint32_t HTTPtoken);
 void      getSamples();
 
 #endif
+
+
+
