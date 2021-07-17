@@ -10,8 +10,8 @@
  
 
 const int mqttPort = 1883;
-const char* mqttUser = "user"; //replace with your mqtt user name
-const char* mqttPassword = "password"; //replace with your mqtt password 
+const char* mqttUser = "sh"; //replace with your mqtt user name
+const char* mqttPassword = "S0r3nH0lm1657"; //replace with your mqtt password 
 const char* mqttServer = "192.168.187.20"; //replace with your mqtt broker IP
 PubSubClient MQTTclient(WifiClient); // added for MQTT
 
@@ -52,10 +52,14 @@ JsonObject& root = jsonBuffer.createObject();
       }
       root["wifi"] = wifi;
 
+
+      
       JsonArray& channelArray = jsonBuffer.createArray();
       for(int i=0; i<maxInputs; i++){
         if(inputChannel[i]->isActive()){
+          
           JsonObject& channelObject = jsonBuffer.createObject();
+          
           channelObject.set(F("channel"),inputChannel[i]->_name);
           if(inputChannel[i]->_type == channelTypeVoltage){
             channelObject.set(F("Vrms"),statRecord.accum1[i]);
@@ -78,34 +82,38 @@ JsonObject& root = jsonBuffer.createObject();
             channelObject.set("phase", inputChannel[i]->getPhase(amps));
             channelObject.set("lastphase", inputChannel[i]->_lastPhase);
           }
-          channelArray.add(channelObject);
+           
+            String payload = "";
+            channelObject.printTo(payload);
+            char charBuff[payload.length() + 1];
+            payload.toCharArray(charBuff,payload.length() + 1);
+            
+            String test = "IoTaWatt/inputs/";
+            test +=  inputChannel[i]->_channel;
+            const char* msg = test.c_str();
+           
+            MQTTclient.publish( msg , charBuff);
+            
         }
       }
-      root["inputs"] = channelArray;
+      
 
-    JsonArray& outputArray = jsonBuffer.createArray();
-    Script* script = outputs->first();
-    while(script){
-      trace(T_WEB,16,1);
-      JsonObject& channelObject = jsonBuffer.createObject();
-      channelObject.set(F("name"),script->name());
-      channelObject.set(F("units"),script->getUnits());
-      double value = script->run((IotaLogRecord*)nullptr, &statRecord, 1.0);
-      channelObject.set(F("value"),value);
-      outputArray.add(channelObject);
-      script = script->next();
-    }
-    trace(T_WEB,16,2);
-    root["outputs"] = outputArray;
-
-
+      JsonArray& outputArray = jsonBuffer.createArray();
+      Script* script = outputs->first();
+      while(script){
+        trace(T_WEB,16,1);
+        JsonObject& channelObject = jsonBuffer.createObject();
+        channelObject.set(F("name"),script->name());
+        channelObject.set(F("units"),script->getUnits());
+        double value = script->run((IotaLogRecord*)nullptr, &statRecord, 1.0);
+        channelObject.set(F("value"),value);
+        outputArray.add(channelObject);
+        script = script->next();
+      }
+      trace(T_WEB,16,2);
+      root["outputs"] = outputArray;
 
 
-  String payload = "";
-  root["inputs"].printTo(payload);
-  char charBuff[payload.length() + 1];
-  payload.toCharArray(charBuff,payload.length() + 1);
-  MQTTclient.publish("IoTaWatt/inputs", charBuff);
 
   String outputload = "";
   root["outputs"].printTo(outputload);
